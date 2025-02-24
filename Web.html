@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miot Eye BLE Controller</title>
+    <style>
+		body {
+			font-family: Arial, sans-serif;
+			text-align: center;
+			background-color: #121212; /* Dark background */
+			color: #e0e0e0; /* Light text */
+			margin: 0;
+			padding: 0;
+		}
+
+		h2 {
+			margin-top: 50px;
+			color: #ffffff; /* White text */
+		}
+
+		.container {
+			max-width: 400px;
+			margin: 20px auto;
+			padding: 20px;
+			background: #1e1e1e; /* Darker container */
+			border-radius: 10px;
+			box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.1); /* Softer shadow */
+		}
+
+		.btn {
+			display: block;
+			width: 100%;
+			padding: 12px;
+			margin: 10px 0;
+			font-size: 16px;
+			font-weight: bold;
+			color: #ffffff;
+			background-color: #007bff; /* Blue button */
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			transition: 0.3s ease;
+		}
+
+		.btn:hover {
+			background-color: #0056b3;
+		}
+
+		.status {
+			margin-top: 15px;
+			font-size: 14px;
+			color: #bbbbbb; /* Lighter gray */
+		}
+	</style>
+</head>
+<body>
+
+    <h2>Miot Eye BLE Controller</h2>
+    <div class="container">
+        <button class="btn" onmousedown="startRapidSend('sleepy')" onmouseup="stopRapidSend()">Sleepy Eye</button>
+        <button class="btn" onmousedown="startRapidSend('wink')" onmouseup="stopRapidSend()">Wink Wink</button>
+		<button class="btn" onmousedown="startRapidSend('rapid')" onmouseup="stopRapidSend()">Wiggle Wiggle</button>
+		<button class="btn" onmousedown="startRapidSend('botheye')" onmouseup="stopRapidSend()">Both Eye</button>
+        <p class="status" id="status">Not connected</p>
+    </div>
+
+    <script>
+        let bleDevice;
+        let gattServer;
+        let bleService;
+        let bleCharacteristic;
+
+        async function connectBLE() {
+            try {
+                bleDevice = await navigator.bluetooth.requestDevice({
+                    acceptAllDevices: true,
+                    optionalServices: ['fb349b5f-8000-0080-0010-0000a1b20000']
+                });
+
+                gattServer = await bleDevice.gatt.connect();
+				bleService = await gattServer.getPrimaryService(0x00FF);
+				bleCharacteristic = await bleService.getCharacteristic(0xFF01);
+
+                document.getElementById("status").innerText = "Connected to Miot BLE!";
+                console.log("Connected to Miot BLE!");
+            } catch (error) {
+                document.getElementById("status").innerText = "BLE Connection Error!";
+                console.log("BLE Connection Error: " + error);
+                alert("BLE Connection Error: " + error);
+            }
+        }
+
+        async function sendData(command) {
+            if (!bleCharacteristic) {
+                await connectBLE();
+            }
+
+            let encoder = new TextEncoder();
+            let data = encoder.encode(command);  
+            await bleCharacteristic.writeValue(data);
+            console.log("Sent:", command);
+        }
+		
+		function startRapidSend(command) {
+            sendData(command);  // Send once immediately
+            sendInterval = setInterval(() => sendData(command), 100);  // Send every 100ms
+        }
+
+        function stopRapidSend() {
+            clearInterval(sendInterval);
+        }
+    </script>
+
+</body>
+</html>
