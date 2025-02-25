@@ -111,6 +111,14 @@
 		console.log("Received response:", response);
 		document.getElementById("resp").innerText = response;
 	}
+	function startRapidSend(command) {
+            sendData(command);  // Send once immediately
+            sendInterval = setInterval(() => sendData(command), 100);  // Send every 100ms
+        }
+        function stopRapidSend() {
+            clearInterval(sendInterval);
+        }
     </script>
+
 </body>
 </html>
