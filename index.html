@@ -75,7 +75,7 @@
             try {
                 bleDevice = await navigator.bluetooth.requestDevice({
                     acceptAllDevices: true,
-                    optionalServices: ['0000bf00-0000-1000-8000-00805f9b34fb']
+                    optionalServices: ['0000ba00-0000-1000-8000-00805f9b34fb']
                 });
 
                 gattServer = await bleDevice.gatt.connect();
@@ -103,15 +103,15 @@
             await bleCharacteristic.writeValue(data);
             console.log("Sent:", command);
         }
-	function handleNotifications(event) {
-		// event.target.value is a DataView containing the response
-		let value = event.target.value;
-		let decoder = new TextDecoder('utf-8');
-		let response = decoder.decode(value);
-		console.log("Received response:", response);
-		document.getElementById("resp").innerText = response;
-	}
-	function startRapidSend(command) {
+		function handleNotifications(event) {
+			// event.target.value is a DataView containing the response
+			let value = event.target.value;
+			let decoder = new TextDecoder('utf-8');
+			let response = decoder.decode(value);
+			console.log("Received response:", response);
+			document.getElementById("resp").innerText = response;
+		}
+		function startRapidSend(command) {
             sendData(command);  // Send once immediately
             sendInterval = setInterval(() => sendData(command), 100);  // Send every 100ms
         }
