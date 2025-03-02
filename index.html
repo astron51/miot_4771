@@ -58,10 +58,11 @@
 
     <h2>Miot Eye BLE Controller</h2>
     <div class="container">
-        <button class="btn" onmousedown="startRapidSend('sleepy_miotc1')" onmouseup="stopRapidSend()">Sleepy Eye</button>
-        <button class="btn" onmousedown="startRapidSend('wink_miotc2')" onmouseup="stopRapidSend()">Wink Wink</button>
-		<button class="btn" onmousedown="startRapidSend('rapid_miotc3')" onmouseup="stopRapidSend()">Wiggle Wiggle</button>
-		<button class="btn" onmousedown="startRapidSend('botheye_miotc4')" onmouseup="stopRapidSend()">Both Eye</button>
+        <button class="btn" onclick="sendData('sleepy_miotc1')">Sleepy Eye</button>
+        <button class="btn" onmousedown="sendData('wink_miotc2')">Wink Wink</button>
+		<button class="btn" onmousedown="sendData('rapid_miotc3')">Wiggle Wiggle</button>
+		<button class="btn" onmousedown="sendData('botheye_miotc4')">Both Eye</button>
+		<button class="btn" onmousedown="sendData('panic_miotc5')">Panic Reset</button>
         <p class="status" id="status">Not connected</p>
 		<p class="status" id="resp">...</p>
     </div>
