@@ -76,10 +76,12 @@
         let bleCharacteristic;
         async function connectBLE() {
             try {
-                bleDevice = await navigator.bluetooth.requestDevice({
-                    acceptAllDevices: true,
-                    optionalServices: ['0000ba00-0000-1000-8000-00805f9b34fb']
-                });
+		bleDevice = await navigator.bluetooth.requestDevice({
+			filters: [{
+				name: 'NoCookiesHere',
+				services: ['0000ba00-0000-1000-8000-00805f9b34fb']
+			}]
+		});
 
                 gattServer = await bleDevice.gatt.connect();
 				bleService = await gattServer.getPrimaryService('0000ba00-0000-1000-8000-00805f9b34fb');
